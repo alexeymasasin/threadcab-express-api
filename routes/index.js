@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
-const { UserController } = require("../controllers");
+const { UserController, CommentController } = require("../controllers");
 const authentificateToken = require("../middleware/auth");
 const PostController = require("../controllers/post-controller");
 
@@ -9,10 +9,10 @@ const uploadDestination = "uploads";
 
 // Defining storage destination
 const storage = multer.diskStorage({
-    destination: uploadDestination,
-    filename: function(req, file, cb) {
-        cb(null, file.originalname);
-    },
+  destination: uploadDestination,
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
 });
 
 const uploads = multer({ storage: storage });
@@ -29,5 +29,13 @@ router.post("/posts", authentificateToken, PostController.createPost);
 router.get("/posts", authentificateToken, PostController.getAllPosts);
 router.get("/posts/:id", authentificateToken, PostController.getPostById);
 router.delete("/posts/:id", authentificateToken, PostController.deletePost);
+
+// Comment routes
+router.post("/comments", authentificateToken, CommentController.createComment);
+router.delete(
+  "/comments/:id",
+  authentificateToken,
+  CommentController.deleteComment,
+);
 
 module.exports = router;
